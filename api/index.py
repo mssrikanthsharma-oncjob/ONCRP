@@ -1,21 +1,12 @@
-"""Vercel serverless function entry point for full Flask app."""
+"""Vercel-compatible Flask application entry point."""
 import os
 import sys
 
-# Add parent directory to Python path
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
-sys.path.insert(0, parent_dir)
+# Add parent directory to path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import the full Flask application
+# Import Flask app
 from app import create_app
 
-# Create the Flask application in production mode
+# Create app instance
 app = create_app('production')
-
-# Export for Vercel (this is the entry point Vercel will use)
-def handler(request, context):
-    return app
-
-# Also make the app available directly
-application = app
