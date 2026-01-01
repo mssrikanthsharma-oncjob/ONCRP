@@ -1,0 +1,268 @@
+// Main Application Logic
+
+class BookingApp {
+    constructor() {
+        this.currentTab = 'bookings';
+        this.bookings = [];
+        this.filteredBookings = [];
+        this.sortColumn = null;
+        this.sortDirection = 'asc';
+        this.editingBooking = null;
+        
+        this.init();
+    }
+
+    init() {
+        // Check authentication on page load
+        if (authService.isAuthenticated()) {
+            this.showDashboard();
+        } else {
+            this.showLogin();
+        }
+
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // Login form
+        const loginForm = document.getElementById('login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        }
+
+        // Logout button
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => authService.logout());
+        }
+
+        // Tab navigation
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-tab')) {
+                this.switchTab(e.target.dataset.tab);
+            }
+        });
+    }
+
+    async handleLogin(e) {
+        e.preventDefault();
+        
+        const username = FormValidator.sanitizeInput(document.getElementById('username').value);
+        const password = document.getElementById('password').value;
+
+        // Validate form
+        const validation = FormValidator.validateLogin(username, password);
+        if (!validation.isValid) {
+            UIUtils.showError(validation.errors.join(', '));
+            return;
+        }
+
+        UIUtils.hideError();
+        UIUtils.setLoading('login-btn', true);
+
+        try {
+            const result = await authService.login(username, password);
+            
+            if (result.success) {
+                UIUtils.showSuccess('Login successful! Redirecting...');
+                setTimeout(() => {
+                    this.showDashboard();
+                }, 1000);
+            } else {
+                UIUtils.showError(result.error);
+            }
+        } catch (error) {
+            UIUtils.showError('Login failed. Please try again.');
+        } finally {
+            UIUtils.setLoading('login-btn', false);
+        }
+    }
+
+    showLogin() {
+        document.getElementById('login-container').style.display = 'flex';
+        document.getElementById('dashboard').style.display = 'none';
+    }
+
+    showDashboard() {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        
+        this.updateUserInfo();
+        this.setupDashboardTabs();
+        this.loadBookings();
+    }
+
+    updateUserInfo() {
+        const user = authService.getCurrentUser();
+        if (user) {
+            document.getElementById('user-name').textContent = user.username;
+            document.getElementById('user-role').textContent = user.role.replace('_', ' ').toUpperCase();
+        }
+    }
+
+    setupDashboardTabs() {
+        const user = authService.getCurrentUser();
+        
+        // Show/hide tabs and features based on user role
+        if (user && user.role === 'sales_person') {
+            // Sales person has limited access
+            this.applySalesPersonRestrictions();
+        } else if (user && user.role === 'admin') {
+            // Admin has full access
+            this.applyAdminPermissions();
+        }
+
+        // Set default active tab
+        this.switchTab('bookings');
+    }
+
+    applySalesPersonRestrictions() {
+        // Hide analytics tab for sales persons
+        const analyticsTab = document.querySelector('[data-tab="analytics"]');
+        if (analyticsTab) {
+            analyticsTab.style.display = 'none';
+        }
+
+        // Hide certain booking actions for sales persons
+        this.restrictBookingActions();
+        
+        // Add visual indicator for limited access
+        this.addRoleIndicator('Limited Access - Sales Person');
+        
+        // Add click handler to show permission denied message for hidden tabs
+        this.addRestrictedTabHandlers();
+    }
+
+    applyAdminPermissions() {
+        // Show all tabs for admin
+        const analyticsTab = document.querySelector('[data-tab="analytics"]');
+        if (analyticsTab) {
+            analyticsTab.style.display = 'block';
+        }
+
+        // Enable all booking actions for admin
+        this.enableAllBookingActions();
+        
+        // Add visual indicator for full access
+        this.addRoleIndicator('Full Access - Administrator');
+    }
+
+    addRestrictedTabHandlers() {
+        // Add event listeners to show permission messages
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('nav-tab') && e.target.style.display === 'none') {
+                e.preventDefault();
+                UIUtils.showError('Access denied: This section requires administrator privileges.');
+            }
+        });
+    }
+
+    restrictBookingActions() {
+        // Sales persons can view and edit bookings but have limited delete permissions
+        // This will be implemented in the booking manager
+        if (window.bookingManager) {
+            window.bookingManager.setUserRole('sales_person');
+        }
+    }
+
+    enableAllBookingActions() {
+        // Admins have full permissions
+        if (window.bookingManager) {
+            window.bookingManager.setUserRole('admin');
+        }
+    }
+
+    addRoleIndicator(message) {
+        const userRole = document.getElementById('user-role');
+        if (userRole) {
+            userRole.title = message;
+        }
+    }
+
+    switchTab(tabName) {
+        // Check if user has permission to access this tab
+        if (!this.canAccessTab(tabName)) {
+            UIUtils.showError('You do not have permission to access this section.');
+            return;
+        }
+
+        // Update tab buttons
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        const targetTab = document.querySelector(`[data-tab="${tabName}"]`);
+        if (targetTab && targetTab.style.display !== 'none') {
+            targetTab.classList.add('active');
+        }
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+
+        this.currentTab = tabName;
+
+        // Load tab-specific data
+        if (tabName === 'bookings') {
+            this.loadBookings();
+        } else if (tabName === 'analytics') {
+            this.loadAnalytics();
+        }
+    }
+
+    canAccessTab(tabName) {
+        const user = authService.getCurrentUser();
+        if (!user) return false;
+
+        // Route guards based on user role
+        if (tabName === 'analytics') {
+            // Only admins can access analytics
+            return user.role === 'admin';
+        } else if (tabName === 'bookings') {
+            // Both admins and sales persons can access bookings
+            return user.role === 'admin' || user.role === 'sales_person';
+        }
+
+        return true; // Default allow
+    }
+
+    async loadBookings() {
+        // Delegate to booking manager
+        if (window.bookingManager) {
+            await window.bookingManager.loadBookings();
+        }
+    }
+
+    async loadAnalytics() {
+        // Load analytics data using the analytics manager
+        if (window.analyticsManager) {
+            await window.analyticsManager.loadAnalytics();
+        }
+    }
+
+    // Delegate booking operations to booking manager
+    editBooking(id) {
+        if (window.bookingManager) {
+            window.bookingManager.editBooking(id);
+        }
+    }
+
+    deleteBooking(id) {
+        if (window.bookingManager) {
+            window.bookingManager.confirmDeleteBooking(id);
+        }
+    }
+
+    sortTable(column) {
+        if (window.bookingManager) {
+            window.bookingManager.sortTable(column);
+        }
+    }
+}
+
+// Initialize app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.app = new BookingApp();
+});
