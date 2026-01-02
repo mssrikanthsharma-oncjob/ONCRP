@@ -10,31 +10,50 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin: 0;
+    padding: 0;
 }
 
+/* Mobile-first: Default styles for mobile */
 .container {
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     width: 100%;
-    max-width: 400px;
-    margin: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+/* Desktop styles - only apply on larger screens */
+@media (min-width: 769px) {
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .container {
+        border-radius: 10px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 20px;
+        min-height: auto;
+    }
 }
 
 .header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 30px 20px;
+    padding: 25px 20px;
     text-align: center;
 }
 
 .header h1 {
-    font-size: 24px;
-    margin-bottom: 5px;
+    font-size: 22px;
+    margin-bottom: 8px;
 }
 
 .header p {
@@ -43,7 +62,25 @@ body {
 }
 
 .form-container {
-    padding: 30px;
+    padding: 25px 20px;
+    flex: 1;
+}
+
+/* Desktop header styles */
+@media (min-width: 769px) {
+    .header {
+        padding: 30px 20px;
+    }
+    
+    .header h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+    }
+    
+    .form-container {
+        padding: 30px;
+        flex: none;
+    }
 }
 
 .form-group {
@@ -52,18 +89,21 @@ body {
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
     color: #333;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 15px;
 }
 
 .form-group input {
     width: 100%;
-    padding: 12px;
+    padding: 16px;
     border: 2px solid #e1e1e1;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
     transition: border-color 0.3s;
+    box-sizing: border-box;
+    min-height: 48px;
 }
 
 .form-group input:focus {
@@ -73,14 +113,36 @@ body {
 
 .btn {
     width: 100%;
-    padding: 12px;
+    padding: 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
     margin-bottom: 10px;
+    min-height: 48px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+/* Desktop form styles */
+@media (min-width: 769px) {
+    .form-group label {
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+    
+    .form-group input {
+        padding: 12px;
+        border-radius: 5px;
+    }
+    
+    .btn {
+        padding: 12px;
+        border-radius: 5px;
+    }
 }
 
 .btn-primary {
@@ -127,27 +189,47 @@ body {
     padding-top: 20px;
     margin-top: 20px;
     background: #f8f9fa;
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 15px;
 }
 
 .demo-credentials h3 {
     color: #666;
-    font-size: 14px;
-    margin-bottom: 10px;
+    font-size: 15px;
+    margin-bottom: 12px;
     text-align: center;
 }
 
 .demo-credentials p {
     font-size: 12px;
     color: #555;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     text-align: center;
     font-family: 'Courier New', monospace;
     background: white;
-    padding: 5px 10px;
-    border-radius: 3px;
+    padding: 10px;
+    border-radius: 6px;
     border: 1px solid #e1e1e1;
+}
+
+/* Desktop demo credentials */
+@media (min-width: 769px) {
+    .demo-credentials {
+        border-radius: 5px;
+        padding: 15px;
+    }
+    
+    .demo-credentials h3 {
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .demo-credentials p {
+        font-size: 12px;
+        padding: 5px 10px;
+        margin-bottom: 5px;
+        border-radius: 3px;
+    }
 }
 
 .loading {
@@ -155,7 +237,7 @@ body {
     pointer-events: none;
 }
 
-/* Dashboard Styles */
+/* Dashboard Styles - Mobile First */
 .dashboard {
     display: none;
     min-height: 100vh;
@@ -165,28 +247,37 @@ body {
 .navbar {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
-    padding: 15px 30px;
+    padding: 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .navbar h1 {
-    font-size: 20px;
+    font-size: 18px;
+    flex: 1;
+    min-width: 200px;
 }
 
 .user-info {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
+    font-size: 13px;
+    flex-wrap: wrap;
 }
 
 .user-role {
     background: rgba(255, 255, 255, 0.2);
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-size: 11px;
 }
 
 .logout-btn {
@@ -194,9 +285,11 @@ body {
     border: none;
     color: white;
     padding: 8px 15px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     transition: background 0.3s;
+    min-height: 36px;
+    font-size: 13px;
 }
 
 .logout-btn:hover {
@@ -204,7 +297,41 @@ body {
 }
 
 .main-content {
-    padding: 30px;
+    padding: 20px 15px;
+}
+
+/* Desktop dashboard styles */
+@media (min-width: 769px) {
+    .navbar {
+        padding: 15px 30px;
+        flex-wrap: nowrap;
+        gap: 15px;
+    }
+    
+    .navbar h1 {
+        font-size: 20px;
+    }
+    
+    .user-info {
+        gap: 15px;
+        font-size: 14px;
+        flex-wrap: nowrap;
+    }
+    
+    .user-role {
+        font-size: 12px;
+        border-radius: 15px;
+        padding: 5px 10px;
+    }
+    
+    .logout-btn {
+        padding: 8px 15px;
+        border-radius: 5px;
+    }
+    
+    .main-content {
+        padding: 30px;
+    }
 }
 
 .nav-tabs {
@@ -212,20 +339,28 @@ body {
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     overflow: hidden;
+    flex-direction: row;
 }
 
 .nav-tab {
     flex: 1;
-    padding: 15px 20px;
+    padding: 15px 12px;
     background: white;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     color: #666;
     transition: all 0.3s;
+    text-align: center;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-tab.active {
@@ -236,6 +371,49 @@ body {
 .nav-tab:hover:not(.active) {
     background: #f8f9fa;
     color: #333;
+}
+
+.nav-tab:focus {
+    outline: 2px solid #667eea;
+    outline-offset: -2px;
+}
+
+/* Desktop nav tabs */
+@media (min-width: 769px) {
+    .nav-tabs {
+        margin-bottom: 30px;
+    }
+    
+    .nav-tab {
+        padding: 15px 20px;
+        font-size: 16px;
+    }
+}
+
+/* Small mobile - stack tabs vertically */
+@media (max-width: 480px) {
+    .nav-tabs {
+        flex-direction: column;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .nav-tab {
+        padding: 12px;
+        border-radius: 0;
+        border-bottom: 1px solid #e1e1e1;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    
+    .nav-tab:first-child {
+        border-radius: 10px 10px 0 0;
+    }
+    
+    .nav-tab:last-child {
+        border-radius: 0 0 10px 10px;
+        border-bottom: none;
+    }
 }
 
 .tab-content {
@@ -250,7 +428,7 @@ body {
     background: white;
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 20px 15px;
     margin-bottom: 20px;
 }
 
@@ -258,24 +436,44 @@ body {
     color: #333;
     margin-bottom: 20px;
     font-size: 18px;
+    text-align: center;
 }
 
-/* Table Styles */
+/* Desktop card styles */
+@media (min-width: 769px) {
+    .card {
+        padding: 20px;
+    }
+    
+    .card h2 {
+        text-align: left;
+    }
+}
+
+/* Table Styles - Mobile First */
 .table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 15px 0;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    min-width: 900px; /* Ensure table doesn't get too cramped on mobile */
+    font-size: 14px;
 }
 
 .table th,
 .table td {
-    padding: 12px;
+    padding: 12px 8px;
     text-align: left;
     border-bottom: 1px solid #e1e1e1;
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 .table th {
@@ -284,6 +482,11 @@ body {
     color: #333;
     cursor: pointer;
     user-select: none;
+    font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 2px solid #e1e1e1;
 }
 
 .table th:hover {
@@ -295,9 +498,12 @@ body {
 }
 
 .btn-sm {
-    padding: 5px 10px;
+    padding: 6px 10px;
     font-size: 12px;
-    margin: 0 2px;
+    margin: 2px;
+    border-radius: 5px;
+    min-height: 32px;
+    min-width: 60px;
 }
 
 .btn-edit {
@@ -310,9 +516,47 @@ body {
     color: white;
 }
 
-/* Form Styles */
+/* Desktop table styles */
+@media (min-width: 769px) {
+    .table {
+        font-size: 14px;
+        min-width: auto;
+    }
+    
+    .table th,
+    .table td {
+        padding: 12px;
+    }
+    
+    .table th {
+        font-size: 14px;
+    }
+}
+
+/* Small mobile table adjustments */
+@media (max-width: 480px) {
+    .table {
+        font-size: 12px;
+        min-width: 750px;
+    }
+    
+    .table th,
+    .table td {
+        padding: 8px 6px;
+    }
+    
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 10px;
+        min-height: 28px;
+        min-width: 50px;
+    }
+}
+
+/* Form Styles - Mobile First */
 .form-row {
     display: flex;
+    flex-direction: column;
     gap: 15px;
     margin-bottom: 15px;
 }
@@ -322,38 +566,102 @@ body {
     margin-bottom: 0;
 }
 
-/* Chart Container */
+/* Desktop form styles */
+@media (min-width: 769px) {
+    .form-row {
+        flex-direction: row;
+        gap: 15px;
+    }
+}
+
+/* Chart Container - Mobile First */
 .chart-container {
     position: relative;
-    height: 400px;
+    height: 280px;
     margin: 20px 0;
+}
+
+/* Desktop chart styles */
+@media (min-width: 769px) {
+    .chart-container {
+        height: 400px;
+    }
+}
+
+/* Small mobile chart adjustments */
+@media (max-width: 480px) {
+    .chart-container {
+        height: 220px;
+    }
 }
 
 .kpi-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
 .kpi-card {
     background: white;
     border-radius: 10px;
-    padding: 20px;
+    padding: 20px 15px;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .kpi-value {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: bold;
     color: #667eea;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
 }
 
 .kpi-label {
     color: #666;
-    font-size: 14px;
+    font-size: 13px;
+}
+
+/* Desktop KPI styles */
+@media (min-width: 769px) {
+    .kpi-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .kpi-card {
+        padding: 20px;
+    }
+    
+    .kpi-value {
+        font-size: 32px;
+        margin-bottom: 5px;
+    }
+    
+    .kpi-label {
+        font-size: 14px;
+    }
+}
+
+/* Small mobile - single column */
+@media (max-width: 480px) {
+    .kpi-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .kpi-card {
+        padding: 18px 15px;
+    }
+    
+    .kpi-value {
+        font-size: 24px;
+    }
+    
+    .kpi-label {
+        font-size: 12px;
+    }
 }
 
 /* Touch and accessibility improvements */
@@ -442,361 +750,136 @@ body {
     border: 1px solid #f1b0b7;
 }
 
-/* Booking header and search filters */
+/* Booking header and search filters - Mobile First */
 .booking-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
+}
+
+.booking-header h2 {
+    text-align: center;
+    margin-bottom: 0;
+    font-size: 20px;
 }
 
 .search-filters {
     display: flex;
+    flex-direction: column;
     gap: 15px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 .search-filters .form-group {
     flex: 1;
-    min-width: 200px;
+    min-width: auto;
     margin-bottom: 0;
 }
 
 .search-filters input,
 .search-filters select {
-    padding: 12px;
+    padding: 14px;
     border: 2px solid #e1e1e1;
-    border-radius: 5px;
+    border-radius: 8px;
     margin-bottom: 0;
     width: 100%;
     box-sizing: border-box;
+    font-size: 16px;
+    min-height: 48px;
 }
 
-/* Mobile-First Responsive Design */
+#add-booking-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    min-height: 48px;
+    border-radius: 8px;
+}
 
-/* Base mobile styles (320px and up) */
-@media (max-width: 768px) {
-    body {
-        padding: 0;
-        margin: 0;
-        min-height: 100vh;
-        align-items: stretch;
-        justify-content: stretch;
+/* Desktop booking styles */
+@media (min-width: 769px) {
+    .booking-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
     }
-
-    .container {
-        margin: 0;
-        border-radius: 0;
-        max-width: 100%;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+    
+    .booking-header h2 {
+        text-align: left;
     }
-
-    .header {
-        padding: 25px 20px;
-        border-radius: 0;
+    
+    .search-filters {
+        flex-direction: row;
+        gap: 15px;
     }
-
-    .header h1 {
-        font-size: 22px;
-        margin-bottom: 8px;
-    }
-
-    .header p {
-        font-size: 14px;
-    }
-
-    .form-container {
-        padding: 25px 20px;
-        flex: 1;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-group label {
-        font-size: 15px;
-        margin-bottom: 8px;
-        font-weight: 600;
-    }
-
-    .form-group input {
-        padding: 16px;
-        font-size: 16px; /* Prevents zoom on iOS */
-        border-radius: 8px;
-        border: 2px solid #e1e1e1;
-    }
-
-    .btn {
-        padding: 16px;
-        font-size: 16px;
-        touch-action: manipulation; /* Improves touch responsiveness */
-        border-radius: 8px;
-        min-height: 48px; /* Minimum touch target size */
-    }
-
-    .demo-credentials {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 8px;
-    }
-
-    .demo-credentials h3 {
-        font-size: 15px;
-        margin-bottom: 12px;
-    }
-
-    .demo-credentials p {
-        font-size: 12px;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 6px;
-    }
-
-    /* Dashboard mobile styles */
-    .dashboard {
-        min-height: 100vh;
-    }
-
-    .navbar {
-        padding: 15px 20px;
-        flex-wrap: wrap;
-        gap: 12px;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .navbar h1 {
-        font-size: 18px;
-        flex: 1;
+    
+    .search-filters .form-group {
         min-width: 200px;
     }
-
-    .user-info {
-        gap: 10px;
-        font-size: 13px;
-        flex-wrap: wrap;
-        align-items: center;
-    }
-
-    .user-role {
-        padding: 6px 10px;
-        font-size: 11px;
-        border-radius: 12px;
-    }
-
-    .logout-btn {
-        padding: 8px 15px;
-        font-size: 13px;
-        border-radius: 6px;
-        min-height: 36px;
-    }
-
-    .main-content {
-        padding: 20px 15px;
-    }
-
-    .nav-tabs {
-        flex-direction: row;
-        margin-bottom: 20px;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .nav-tab {
-        padding: 15px 12px;
-        font-size: 15px;
-        text-align: center;
-        min-height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .card {
-        padding: 20px 15px;
-        margin-bottom: 20px;
-        border-radius: 10px;
-    }
-
-    .card h2 {
-        font-size: 18px;
-        margin-bottom: 20px;
-        text-align: center;
-    }
-
-    /* Form rows stack on mobile */
-    .form-row {
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 15px;
-    }
-
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    .form-group label {
-        font-size: 15px;
-        margin-bottom: 8px;
-        font-weight: 600;
-    }
-
-    .form-group input,
-    .form-group select {
-        padding: 14px;
-        font-size: 16px;
-        border-radius: 8px;
-        border: 2px solid #e1e1e1;
-        min-height: 48px;
-    }
-
-    /* KPI grid mobile layout */
-    .kpi-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-bottom: 25px;
-    }
-
-    .kpi-card {
-        padding: 20px 15px;
-        border-radius: 10px;
-        text-align: center;
-    }
-
-    .kpi-value {
-        font-size: 28px;
-        margin-bottom: 6px;
-        font-weight: bold;
-    }
-
-    .kpi-label {
-        font-size: 13px;
-        color: #666;
-    }
-
-    /* Table mobile optimization */
-    .table-container {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        margin: 15px 0;
-    }
-
-    .table {
-        min-width: 900px; /* Ensure table doesn't get too cramped */
-        font-size: 14px;
-    }
-
-    .table th,
-    .table td {
-        padding: 12px 8px;
-        white-space: nowrap;
-        vertical-align: middle;
-    }
-
-    .table th {
-        font-size: 13px;
-        background: #f8f9fa;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        font-weight: 600;
-        border-bottom: 2px solid #e1e1e1;
-    }
-
-    .btn-sm {
-        padding: 6px 10px;
-        font-size: 12px;
-        margin: 2px;
-        border-radius: 5px;
-        min-height: 32px;
-        min-width: 60px;
-    }
-
-    /* Chart containers mobile */
-    .chart-container {
-        height: 280px;
-        margin: 20px 0;
-        position: relative;
-    }
-
-    /* Search and filter mobile layout */
-    .booking-header {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 20px;
-        margin-bottom: 20px;
-    }
-
-    .booking-header h2 {
-        text-align: center;
-        margin-bottom: 0;
-        font-size: 20px;
-    }
-
-    .search-filters {
-        flex-direction: column;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-
-    .search-filters .form-group {
-        min-width: auto;
-        margin-bottom: 0;
-    }
-
-    #search-input,
-    #status-filter {
-        padding: 14px;
-        font-size: 16px;
-        border-radius: 8px;
-        border: 2px solid #e1e1e1;
-        min-height: 48px;
-    }
-
-    /* Add booking button mobile */
-    #add-booking-btn {
-        width: 100%;
-        padding: 15px;
-        font-size: 16px;
-        min-height: 48px;
-        border-radius: 8px;
-    }
-
-    /* Status badges mobile */
-    .status-badge {
-        padding: 4px 8px;
-        font-size: 11px;
-        border-radius: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    /* Error and success messages mobile */
-    .error-message,
-    .success-message {
+    
+    .search-filters input,
+    .search-filters select {
         padding: 12px;
-        font-size: 14px;
-        border-radius: 8px;
-        margin-bottom: 15px;
+        border-radius: 5px;
     }
+    
+    #add-booking-btn {
+        width: auto;
+        padding: 12px 20px;
+    }
+}
 
-    /* Analytics grid becomes single column on mobile */
+/* Status badges */
+.status-badge {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-complete {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Error and success messages */
+.error-message,
+.success-message {
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+/* Analytics grid layout */
+#analytics-tab > div:last-child {
+    display: block;
+}
+
+#analytics-tab > div:last-child > .card {
+    margin-bottom: 20px;
+}
+
+/* Desktop analytics - two column layout */
+@media (min-width: 1025px) {
     #analytics-tab > div:last-child {
-        display: block !important;
-    }
-
-    #analytics-tab > div:last-child > .card {
-        margin-bottom: 20px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
     }
 }
 
